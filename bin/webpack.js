@@ -78,6 +78,9 @@ const runCli = cli => {
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 	const pkg = require(pkgPath);
 
+	pkg.bin = pkg.bin || {};
+	pkg.bin[cli.binName] = "../../webpack-cli/packages/webpack-cli/bin/cli.js";
+
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
 		// eslint-disable-next-line n/no-unsupported-features/es-syntax
 		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
@@ -87,7 +90,8 @@ const runCli = cli => {
 			}
 		);
 	} else {
-		require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+		// require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+		require(pkg.bin[cli.binName]);
 	}
 };
 
@@ -100,12 +104,14 @@ const runCli = cli => {
  * @property {string} url homepage
  */
 
+const webpackCli = "../../webpack-cli";
+
 /** @type {CliOption} */
 const cli = {
-	name: "webpack-cli",
-	package: "webpack-cli",
-	binName: "webpack-cli",
-	installed: isInstalled("webpack-cli"),
+	name: webpackCli,
+	package: webpackCli,
+	binName: webpackCli,
+	installed: isInstalled(webpackCli),
 	url: "https://github.com/webpack/webpack-cli"
 };
 
