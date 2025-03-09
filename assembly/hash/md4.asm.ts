@@ -34,6 +34,9 @@ function roundH(a: u32, b: u32, c: u32, d: u32, i: u32, s: u32): u32 {
 	return rotl<u32>(a + H(b, c, d) + load<u32>(i) + 0x6ed9eba1, s);
 }
 
+/**
+ * 初始化哈希状态
+ */
 export function init(): void {
 	A = 0x67452301;
 	B = 0xefcdab89;
@@ -132,11 +135,17 @@ function body(size: u32): void {
 	D = _D;
 }
 
+/**
+ * 处理输入数据块
+ */
 export function update(length: u32): void {
 	body(length);
 	totalLength += length;
 }
 
+/**
+ * 完成哈希计算并输出结果
+ */
 export function final(length: u32): void {
 	const bits: u64 = u64(totalLength + length) << 3;
 	const finalLength: u32 = (length + 9 + 63) & ~63;
